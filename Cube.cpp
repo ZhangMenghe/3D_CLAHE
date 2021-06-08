@@ -9,7 +9,7 @@
 
 Cube::Cube() {
 
-	static const float cubeVertices[24]{
+	const float cubeVertices[24]{
 			-0.5f, -0.5f,  0.5f,
 			0.5f, -0.5f,  0.5f,
 			0.5f,  0.5f,  0.5f,
@@ -19,7 +19,7 @@ Cube::Cube() {
 			0.5f,  0.5f, -0.5f,
 			-0.5f,  0.5f, -0.5f
 	};
-	static const GLuint cubeIndices[36]{
+	const GLuint cubeIndices[36]{
 		0, 1, 2, 2, 3, 0,
 		1, 5, 6, 6, 2, 1,
 		7, 6, 5, 5, 4, 7,
@@ -35,12 +35,12 @@ Cube::Cube() {
 	glBindVertexArray(_VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, _VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), cubeVertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 24, cubeVertices, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cubeIndices), cubeIndices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)*36, cubeIndices, GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);

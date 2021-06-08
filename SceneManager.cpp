@@ -4,7 +4,8 @@
 
 #include "SceneManager.h"
 #include "Shader.h"
-#include "ImageLoader.h"
+// #include "ImageLoader.h"
+#include "dicomLoader.h"
 #include "ComputeCLAHE.h"
 
 #include <stdio.h>
@@ -18,7 +19,7 @@ GLFWwindow* SceneManager::_window;
 // Scene Variables
 Camera* SceneManager::_camera;
 // 3D Volume
-ImageLoader* _dicomVolume;
+dicomLoader* _dicomVolume;
 Cube* SceneManager::_dicomCube;
 GLuint SceneManager::_dicomVolumeTexture;
 GLuint SceneManager::_dicomMaskTexture;
@@ -117,10 +118,17 @@ void SceneManager::InitScene() {
 	////////////////////////////////////////////////////////////////////////////
 	// 3D CLAHE - Cube Volume 
 	std::cerr << "\n\n----- Load 3D DICOM -----\n";
+	std::string folderPath = std::string("../../data/dicom-data/Larry_Smarr_2017/Larry_2017/");
+	_dicomVolume = new dicomLoader;
+    _dicomVolume->sendDataPrepare(512, 512, 116, .001f *512*0.8594, .001f *512*0.8594, .001f * 3.4);
+
+    // _dicomVolume->sendDataPrepare(height, width, dims, sh, sw, sd);
+	bool data_loaded = _dicomVolume->loadData(folderPath, false);
+	if(!data_loaded)
+		std::cout<<"Failed to load data: "<<folderPath<<std::endl;
+
 	_dicomCube = new Cube();
-	std::string folderPath = std::string("C:/Users/kroth/Documents/UCSD/Grad/Thesis/clahe_2/Larry_2017");
-	std::string maskPath = std::string("C:/Users/kroth/Documents/UCSD/Grad/Thesis/clahe_2/Larry_2017/mask");
-	ImageLoader* _dicomVolume = new ImageLoader(folderPath, maskPath, false);
+
 	glm::vec3 volDim = _dicomVolume->GetImageDimensions();
 	_dicomVolumeTexture = _dicomVolume->GetTextureID();
 	_dicomMaskTexture = _dicomVolume->GetMaskID();
@@ -175,7 +183,9 @@ void SceneManager::Draw() {
 	// draw the volume
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	_dicomCube->Draw(_volumeShader, _camera->GetViewProjectMtx(), _camera->GetCamPos(), _currTexture, _dicomMaskTexture, _useMask);
+	_dicomCube->Draw(_volumeShader, _camera->GetViewProjectMtx(), _camera->GetCamPos(), 
+	_dicomVolume->GetTextureID(),// _currTexture,
+	 _dicomMaskTexture, _useMask);
 
 	// Swap buffers
 	glfwSwapBuffers(_window);

@@ -7,7 +7,9 @@
 
 #include <thread>
 #include <algorithm>
-
+// #include <iostream>
+#include <cstring>
+ 
 using namespace std;
 
 void mapHistogram(uint32_t minVal, uint32_t maxVal, uint32_t numPixelsSB, uint32_t numBins, uint32_t* localHist);
@@ -177,8 +179,8 @@ GLuint ComputeCLAHE::ComputeMasked3D_CLAHE(float clipLimit) {
 	// Create the LUTs
 	bool useLUT = true; // to spread out the pixel values for the masked organs
 	uint32_t* minData = new uint32_t[_numOrgans];		std::fill_n(minData, _numOrgans, _numInGrayVals);
-	uint32_t* maxData = new uint32_t[_numOrgans];		memset(maxData, 0, _numOrgans * sizeof(uint32_t));
-	uint32_t* numPixels = new uint32_t[_numOrgans];		memset(numPixels, 0, _numOrgans * sizeof(uint32_t));
+	uint32_t* maxData = new uint32_t[_numOrgans];		std::memset(maxData, 0, _numOrgans * sizeof(uint32_t));
+	uint32_t* numPixels = new uint32_t[_numOrgans];		std::memset(numPixels, 0, _numOrgans * sizeof(uint32_t));
 	computeLUT_Masked(_volDims, minData, maxData, numPixels);
 
 	// Create the Histograms 
@@ -466,7 +468,7 @@ void ComputeCLAHE::computeClipHist(glm::uvec3 volDims, glm::uvec3 numSB, float c
 		// calculate the minClipValue
 		glm::uvec3 sizeSB = volDims / numSB;
 		float tempClipValue = 1.1f * (sizeSB.x * sizeSB.y * sizeSB.z) / _numOutGrayVals;
-		unsigned int minClipValue = unsigned int(tempClipValue + 0.5f);
+		unsigned int minClipValue = (unsigned int)(tempClipValue + 0.5f);
 
 		// Set up Compute Shader 
 		glUseProgram(_excessShader);
@@ -617,7 +619,7 @@ void ComputeCLAHE::computeClipHist_Masked(glm::uvec3 volDims, float clipLimit, u
 		memset(minClipValues, 0, _numOrgans * sizeof(uint32_t));
 		for (int i = 0; i < _numOrgans; i++) {
 			float tempClipValue = 1.1f * numPixels[i] / _numOutGrayVals;
-			minClipValues[i] = unsigned int(tempClipValue + 0.5f);
+			minClipValues[i] = (unsigned int)(tempClipValue + 0.5f);
 		}
 		glGenBuffers(1, &minClipValueBuffer);
 		glBindBuffer(GL_SHADER_STORAGE_BUFFER, minClipValueBuffer);

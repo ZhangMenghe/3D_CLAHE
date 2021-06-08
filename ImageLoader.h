@@ -4,18 +4,17 @@
 
 #pragma once
 
-#include <gl/glew.h>
 #include <glm/glm.hpp>
 
-#include <memory>
-#include <string>
-#include <vector>
+// #include <memory>
+// #include <string>
+// #include <vector>
 
 
-// Win32 LoadImage macro
-#ifdef LoadImage
-#undef LoadImage
-#endif
+// // Win32 LoadImage macro
+// #ifdef LoadImage
+// #undef LoadImage
+// #endif
 
 using namespace std;
 

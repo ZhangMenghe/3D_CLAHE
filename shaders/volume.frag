@@ -3,8 +3,8 @@
 // displays volume texture 
 ////////////////////////////////////////
 
-#version 430
-//#version 440 core
+// #version 430
+#version 430 core
 
 in vs_out {
 	vec3 rayDirection;
@@ -20,12 +20,13 @@ uniform float StepSize = .002;
 uniform vec3 CameraPosition;
 
 // Volume and mask Textures 
-uniform sampler3D Volume;
+uniform usampler3D Volume;
 uniform int useMask;
 layout(r8ui, binding = 1) uniform uimage3D Mask;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Helper functions
+
 
 vec2 RayCube(vec3 rayOrigin, vec3 rayDirection, vec3 extents) {
     vec3 tMin = (-extents - rayOrigin) / rayDirection;
@@ -41,7 +42,10 @@ float RayPlane(vec3 rayOrigin, vec3 rayDirection, vec3 planePoint, vec3 planeNor
 }
 
 vec4 Sample(vec3 samplePoint) {
-	vec4 colorSample = textureLod(Volume, samplePoint, 0.0).rrrr;
+	float sampled_value = textureLod(Volume, samplePoint, 0.0).r;
+	float intensity_01 = sampled_value*0.0002442002442002442;//clamp(sampled_value*0.0002442002442002442, .0, 1.0);//1.0;//clamp(float(textureLod(Volume, samplePoint, 0.0).r) * 0.0002442002442002442, .0, 1.0);
+	vec4 colorSample = vec4(intensity_01);
+	// vec4 colorSample = rrr;
 
 	if (useMask == 1) {
 //		float maskVal = textureLod(Mask, samplePoint, 0.0).x;
@@ -49,7 +53,7 @@ vec4 Sample(vec3 samplePoint) {
 		ivec3 samplePt = ivec3(samplePoint * dims);
 //		samplePt.x = dims.x - samplePt.x;
 		uint maskVal = imageLoad(Mask, samplePt).x;
-		if (maskVal == 0.0) {
+		if (maskVal == uint(0)) {
 			colorSample.a = maskVal;
 		}
 	}
@@ -107,7 +111,7 @@ void main() {
 		t += color.a > .01 ? StepSize : StepSize * 4; // step farther if not in dense part
 	}
 
-	sum.a = clamp(sum.a, 0.0, 1.0);
+	sum.a = 1.0;//clamp(sum.a, 0.0, 1.0);
 	FragColor = sum;		
 }
 ////////////////////////////////////////////////////////////////////////////////

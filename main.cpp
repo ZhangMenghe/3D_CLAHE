@@ -34,12 +34,12 @@ void error_callback(int error, const char* description) {
     throw;
 }
 
-void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, 
-    GLenum severity, GLsizei length, const GLchar* message, const void* userParam) {
-    fprintf(stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n", 
-        (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""), type, severity, message);
-    throw;
-}
+// void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, 
+//     GLenum severity, GLsizei length, const GLchar* message, const void* userParam) {
+//     fprintf(stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n", 
+//         (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""), type, severity, message);
+//     throw;
+// }
 
 ////////////////////////////////////////////////////////////////////////////////
 // Main
@@ -77,8 +77,8 @@ int main(int argc, char** argv){
     }
 
     // During init, enable debug output
-    glEnable(GL_DEBUG_OUTPUT);
-    glDebugMessageCallback(MessageCallback, 0);
+    // glEnable(GL_DEBUG_OUTPUT);
+    // glDebugMessageCallback(MessageCallback, 0);
 
     // Main Render Loop
     SceneManager::InitScene();

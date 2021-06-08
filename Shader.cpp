@@ -2,7 +2,7 @@
 // Shader.cpp
 ////////////////////////////////////////
 
-#include "shader.h"
+#include "Shader.h"
 
 
 GLuint LoadSingleShader(const char* shaderFilePath, ShaderType type)
@@ -19,7 +19,7 @@ GLuint LoadSingleShader(const char* shaderFilePath, ShaderType type)
 	// Try to read shader codes from the shader file.
 	std::string shaderCode;
 
-	std::string fullPath = std::string(SHADER_DIR);
+	std::string fullPath = "../shaders/";//std::string(SHADER_DIR);
 	fullPath += std::string(shaderFilePath);	
 	std::ifstream shaderStream(fullPath.c_str(), std::ios::in);
 	if (shaderStream.is_open())
@@ -31,7 +31,7 @@ GLuint LoadSingleShader(const char* shaderFilePath, ShaderType type)
 	}
 	else
 	{
-		std::cerr << "Impossible to open " << shaderFilePath << ". "
+		std::cerr << "Impossible to open " << fullPath << ". "
 			<< "Check to make sure the file exists and you passed in the "
 			<< "right filepath!"
 			<< std::endl;
@@ -67,8 +67,8 @@ GLuint LoadSingleShader(const char* shaderFilePath, ShaderType type)
 		else if (type == ShaderType::COMPUTE)
 			printf("\rSuccessfully compiled compute shader %s\n", shaderFilePath);
 	}
-
 	return shaderID;
+	
 }
 
 GLuint LinkProgram(GLuint shaderID_1, GLuint shaderID_2=0) {
