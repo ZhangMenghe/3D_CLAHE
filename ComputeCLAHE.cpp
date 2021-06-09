@@ -166,7 +166,6 @@ GLuint ComputeCLAHE::ComputeFocused3D_CLAHE(glm::ivec3 min, glm::ivec3 max, floa
 //             0 returns the original volume
 // Returns the new Masked CLAHE volume texture 
 GLuint ComputeCLAHE::ComputeMasked3D_CLAHE(float clipLimit) {	
-	
 	printf("\n----- Compute Masked 3D CLAHE ----- \n");
 
 	// make sure the clip limit is valid - ie. between [0, 1]
@@ -353,7 +352,7 @@ void ComputeCLAHE::computeLUT_Masked(glm::uvec3 volDims, uint32_t* minData, uint
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, globalMinBuffer);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, globalMaxBuffer);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, _LUTbuffer);
-	glUniform1ui(glGetUniformLocation(_LUTShader_Masked, "NUM_IN_BINS"), _numInGrayVals);
+	glUniform1ui(glGetUniformLocation(_LUTShader_Masked, "NUM_IN_BINS"), _numInGrayVals);//65536
 	glUniform1ui(glGetUniformLocation(_LUTShader_Masked, "NUM_OUT_BINS"), _numOutGrayVals);
 	glUniform1ui(glGetUniformLocation(_LUTShader_Masked, "numOrgans"), _numOrgans);
 
@@ -776,7 +775,7 @@ GLuint ComputeCLAHE::computeLerp(glm::uvec3 volDims, glm::uvec3 numSB, bool useL
 	// make sure writting to the image is finished before reading 
 	glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT | GL_TEXTURE_FETCH_BARRIER_BIT);
 	glUseProgram(0);	
-	
+
 	return newVolumeTexture;
 }
 // Used for Focused CLAHE

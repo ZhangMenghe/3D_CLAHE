@@ -13,20 +13,21 @@ in vs_out {
 
 out vec4 FragColor;
 
-uniform float Threshold = 0.1;	// don't draw when alpha value is less than 10%
+uniform float Threshold = .0;	// don't draw when alpha value is less than 10%
 uniform float Exposure = 1.0;	// brighten volume 1.8
 uniform float Density = 0.1;	// 
 uniform float StepSize = .002;
 uniform vec3 CameraPosition;
 
 // Volume and mask Textures 
-uniform usampler3D Volume;
+// uniform usampler3D Volume;
+uniform sampler3D Volume;
+
 uniform int useMask;
 layout(r8ui, binding = 1) uniform uimage3D Mask;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Helper functions
-
 
 vec2 RayCube(vec3 rayOrigin, vec3 rayDirection, vec3 extents) {
     vec3 tMin = (-extents - rayOrigin) / rayDirection;
@@ -43,7 +44,13 @@ float RayPlane(vec3 rayOrigin, vec3 rayDirection, vec3 planePoint, vec3 planeNor
 
 vec4 Sample(vec3 samplePoint) {
 	float sampled_value = textureLod(Volume, samplePoint, 0.0).r;
-	float intensity_01 = sampled_value*0.0002442002442002442;//clamp(sampled_value*0.0002442002442002442, .0, 1.0);//1.0;//clamp(float(textureLod(Volume, samplePoint, 0.0).r) * 0.0002442002442002442, .0, 1.0);
+
+	float intensity_01 = sampled_value;//*0.0002442002442002442;
+    // float intensity_01 = float(int(textureLod(Volume, samplePoint, 0.0).r) >> 4) & 0xFF) / 255.0;
+
+    // float intensity_01 = float(sampled_value & 0xFF);
+
+
 	vec4 colorSample = vec4(intensity_01);
 	// vec4 colorSample = rrr;
 
@@ -111,7 +118,7 @@ void main() {
 		t += color.a > .01 ? StepSize : StepSize * 4; // step farther if not in dense part
 	}
 
-	sum.a = 1.0;//clamp(sum.a, 0.0, 1.0);
+	sum.a = clamp(sum.a, 0.0, 1.0);
 	FragColor = sum;		
 }
 ////////////////////////////////////////////////////////////////////////////////

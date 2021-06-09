@@ -10,6 +10,7 @@
 
 #include <stdio.h>
 #include <chrono>
+#include <fstream>
 
 // Window Variables
 int SceneManager::_windowWidth;
@@ -123,9 +124,10 @@ void SceneManager::InitScene() {
     _dicomVolume->sendDataPrepare(512, 512, 116, .001f *512*0.8594, .001f *512*0.8594, .001f * 3.4);
 
     // _dicomVolume->sendDataPrepare(height, width, dims, sh, sw, sd);
-	bool data_loaded = _dicomVolume->loadData(folderPath, false);
+	bool data_loaded = _dicomVolume->loadData(folderPath, true);
 	if(!data_loaded)
 		std::cout<<"Failed to load data: "<<folderPath<<std::endl;
+	else std::cout<<"=======DATA LOADED SUCCESS======"<<std::endl;
 
 	_dicomCube = new Cube();
 
@@ -142,6 +144,31 @@ void SceneManager::InitScene() {
 	comp.Init(_dicomVolumeTexture, _dicomMaskTexture, volDim, outputGrayvals_3D, inputGrayvals_3D, numOrgans);
 
 	_3D_CLAHE = comp.Compute3D_CLAHE(numSB_3D, clipLimit3D);
+
+		// int buf_size = volDim.x* volDim.y* volDim.z;
+		// float *outBuffer = new float[buf_size];
+
+		// glActiveTexture(GL_TEXTURE0);
+		// glBindTexture(GL_TEXTURE_3D, _3D_CLAHE);
+
+		// glGetTexImage(GL_TEXTURE_3D,
+		// 			0,
+		// 			GL_RED,
+		// 			GL_FLOAT,
+		// 			outBuffer);
+		// // for(int i=0;i<buf_size;i++)if(outBuffer[i]>0.8f)std::cout<<(int(outBuffer[i]*255)&0xff)<<std::endl;
+		// char* out_data = new char[buf_size];
+		// for(int i=0;i<buf_size;i++)out_data[i] = int(outBuffer[i]*255)&0xff;
+
+		// std::ofstream file("clahe_data", std::ios::binary | std::ios::out | std::ios::app);
+
+		// if(file)
+		// {
+		// file.write(out_data, buf_size);
+		// file.close();
+		// }
+
+
 	_FocusedCLAHE = comp.ComputeFocused3D_CLAHE(min3D, max3D, clipLimit3D);	
 	_MaskedCLAHE = comp.ComputeMasked3D_CLAHE(clipLimit3D);
 
@@ -184,8 +211,8 @@ void SceneManager::Draw() {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	_dicomCube->Draw(_volumeShader, _camera->GetViewProjectMtx(), _camera->GetCamPos(), 
-	_dicomVolume->GetTextureID(),// _currTexture,
-	 _dicomMaskTexture, _useMask);
+	_currTexture,//_dicomVolume->GetTextureID()
+	_dicomMaskTexture, _useMask);
 
 	// Swap buffers
 	glfwSwapBuffers(_window);
@@ -202,7 +229,6 @@ void SceneManager::KeyCallback(GLFWwindow* window, int key, int scancode, int ac
 
 	if (action == GLFW_PRESS) {
 		switch (key) {
-
 			// Close the window
 			case GLFW_KEY_ESCAPE:
 				glfwSetWindowShouldClose(window, GL_TRUE);

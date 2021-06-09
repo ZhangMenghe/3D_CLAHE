@@ -60,20 +60,35 @@ void dicomLoader::sendDataPrepare(int height, int width, int dims, float sh, flo
 
 bool dicomLoader::loadData(std::string dirpath, bool wmask) {
     bool res = loadData(dirpath + "data", g_VolumeTexData);
+    auto vsize = int(g_vol_len / CHANNEL_NUM) ;
+
     if(res){
-        auto vsize = int(g_vol_len / CHANNEL_NUM) ;
         uint16_t* vol_data  = new uint16_t[vsize];
+        // int16_t* vol_data  = new int16_t[vsize];
         for(auto i=0, shift =0; i<vsize; i++, shift+=2){
             vol_data[i] = (((uint16_t)g_VolumeTexData[shift+1])<<8) + (uint16_t)g_VolumeTexData[shift];
+            float tmp = (vol_data[i]  *0.0002442002442002442);
+            vol_data[i] = uint16_t(tmp * 0xffff);
+            // std::cout<<((int16_t)g_VolumeTexData[shift+1])<<" "<<((int16_t)g_VolumeTexData[shift])<<std::endl;
         }
-        _textureID = InitTexture3D(g_img_w, g_img_h, g_img_d, GL_R16UI, GL_RED_INTEGER, GL_UNSIGNED_SHORT, GL_LINEAR, vol_data);
+        // _textureID = InitTexture3D(g_img_w, g_img_h, g_img_d, GL_R16UI, GL_RED_INTEGER, GL_UNSIGNED_SHORT, GL_LINEAR, vol_data);
+        _textureID = InitTexture3D(g_img_w, g_img_h, g_img_d, GL_R16, GL_RED, GL_UNSIGNED_SHORT, GL_LINEAR, vol_data);
+
         delete[] vol_data;
     }
 
     if(wmask){
-        unsigned char* mask_data = new unsigned char[g_vol_len * 2];
+        unsigned char* mask_data = new unsigned char[g_vol_len];
         res &= loadData(dirpath + "mask", mask_data);
-        if(res)_maskID = InitTexture3D(g_img_w, g_img_h, g_img_d, GL_RG8, GL_RG, GL_UNSIGNED_BYTE, GL_LINEAR, mask_data);
+
+        if(res){
+	        unsigned char* maskData = new unsigned char[vsize];
+            for(auto i=0; i<vsize; i++)maskData[i]=mask_data[2*i];
+            _maskID = InitTexture3D(g_img_w, g_img_h, g_img_d, GL_R8, GL_RED, GL_UNSIGNED_BYTE, GL_LINEAR, maskData);
+    	    delete[] maskData;
+        }
+
+        // if(res)_maskID = InitTexture3D(g_img_w, g_img_h, g_img_d, GL_RG8, GL_RG, GL_UNSIGNED_BYTE, GL_LINEAR, mask_data);
 	    delete[] mask_data;
     }
     return res;
