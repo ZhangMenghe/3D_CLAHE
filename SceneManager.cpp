@@ -37,7 +37,7 @@ glm::uvec3 numSB_3D = glm::uvec3(4, 4, 2);
 glm::uvec3 min3D = glm::uvec3(200, 200, 40);
 glm::uvec3 max3D = glm::uvec3(400, 400, 90);
 float clipLimit3D = 0.85f;
-
+bool need_saved = true;
 GLuint _currTexture;
 bool _useMask = false;
 enum class TextureMode {
@@ -144,31 +144,33 @@ void SceneManager::InitScene() {
 	comp.Init(_dicomVolumeTexture, _dicomMaskTexture, volDim, outputGrayvals_3D, inputGrayvals_3D, numOrgans);
 
 	_3D_CLAHE = comp.Compute3D_CLAHE(numSB_3D, clipLimit3D);
+	if(need_saved){
 
-		// int buf_size = volDim.x* volDim.y* volDim.z;
-		// float *outBuffer = new float[buf_size];
+	
+		int buf_size = volDim.x* volDim.y* volDim.z;
+		float *outBuffer = new float[buf_size];
 
-		// glActiveTexture(GL_TEXTURE0);
-		// glBindTexture(GL_TEXTURE_3D, _3D_CLAHE);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_3D, _3D_CLAHE);
 
-		// glGetTexImage(GL_TEXTURE_3D,
-		// 			0,
-		// 			GL_RED,
-		// 			GL_FLOAT,
-		// 			outBuffer);
-		// // for(int i=0;i<buf_size;i++)if(outBuffer[i]>0.8f)std::cout<<(int(outBuffer[i]*255)&0xff)<<std::endl;
-		// char* out_data = new char[buf_size];
-		// for(int i=0;i<buf_size;i++)out_data[i] = int(outBuffer[i]*255)&0xff;
+		glGetTexImage(GL_TEXTURE_3D,
+					0,
+					GL_RED,
+					GL_FLOAT,
+					outBuffer);
+		// for(int i=0;i<buf_size;i++)if(outBuffer[i]>0.8f)std::cout<<(int(outBuffer[i]*255)&0xff)<<std::endl;
+		char* out_data = new char[buf_size];
+		for(int i=0;i<buf_size;i++)out_data[i] = int(outBuffer[i]*255)&0xff;
 
-		// std::ofstream file("clahe_data", std::ios::binary | std::ios::out | std::ios::app);
+		std::ofstream file("clahe_data", std::ios::binary | std::ios::out | std::ios::app);
 
-		// if(file)
-		// {
-		// file.write(out_data, buf_size);
-		// file.close();
-		// }
+		if(file)
+		{
+		file.write(out_data, buf_size);
+		file.close();
+		}
 
-
+}
 	_FocusedCLAHE = comp.ComputeFocused3D_CLAHE(min3D, max3D, clipLimit3D);	
 	_MaskedCLAHE = comp.ComputeMasked3D_CLAHE(clipLimit3D);
 

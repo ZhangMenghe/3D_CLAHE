@@ -87,6 +87,7 @@ bool dicomLoader::loadData(std::string dirpath, bool wmask) {
             _maskID = InitTexture3D(g_img_w, g_img_h, g_img_d, GL_R8, GL_RED, GL_UNSIGNED_BYTE, GL_LINEAR, maskData);
     	    delete[] maskData;
         }
+        // if(res) _maskID = InitTexture3D(g_img_w, g_img_h, g_img_d, GL_R16, GL_RED, GL_UNSIGNED_BYTE, GL_LINEAR, mask_data);
 
         // if(res)_maskID = InitTexture3D(g_img_w, g_img_h, g_img_d, GL_RG8, GL_RG, GL_UNSIGNED_BYTE, GL_LINEAR, mask_data);
 	    delete[] mask_data;
