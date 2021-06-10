@@ -145,8 +145,6 @@ void SceneManager::InitScene() {
 
 	_3D_CLAHE = comp.Compute3D_CLAHE(numSB_3D, clipLimit3D);
 	if(need_saved){
-
-	
 		int buf_size = volDim.x* volDim.y* volDim.z;
 		float *outBuffer = new float[buf_size];
 
