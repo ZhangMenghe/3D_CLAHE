@@ -71,7 +71,7 @@ bool dicomLoader::loadData(std::string dirpath, bool wmask) {
             vol_data[i] = uint16_t(tmp * 0xffff);
             // std::cout<<((int16_t)g_VolumeTexData[shift+1])<<" "<<((int16_t)g_VolumeTexData[shift])<<std::endl;
         }
-        _textureID = InitTexture3D(g_img_w, g_img_h, g_img_d, GL_R16UI, GL_RED_INTEGER, GL_UNSIGNED_SHORT, GL_LINEAR, vol_data);
+        _textureID = InitTexture3D(g_img_w, g_img_h, g_img_d, GL_R32UI, GL_RED_INTEGER, GL_UNSIGNED_SHORT, GL_LINEAR, vol_data);
         // _textureID = InitTexture3D(g_img_w, g_img_h, g_img_d, GL_R16, GL_RED, GL_UNSIGNED_SHORT, GL_LINEAR, vol_data);
 
         delete[] vol_data;
@@ -83,8 +83,8 @@ bool dicomLoader::loadData(std::string dirpath, bool wmask) {
 
         if(res){
 	        unsigned char* maskData = new unsigned char[vsize];
-            for(auto i=0; i<vsize; i++)maskData[i]=mask_data[2*i];
-            _maskID = InitTexture3D(g_img_w, g_img_h, g_img_d, GL_R8, GL_RED, GL_UNSIGNED_BYTE, GL_LINEAR, maskData);
+            for(auto i=0; i<vsize; i++){maskData[i]=mask_data[2*i];            }
+            _maskID = InitTexture3D(g_img_w, g_img_h, g_img_d, GL_R32UI, GL_RED_INTEGER, GL_UNSIGNED_BYTE, GL_LINEAR, maskData);
     	    delete[] maskData;
         }
         // if(res) _maskID = InitTexture3D(g_img_w, g_img_h, g_img_d, GL_R16, GL_RED, GL_UNSIGNED_BYTE, GL_LINEAR, mask_data);

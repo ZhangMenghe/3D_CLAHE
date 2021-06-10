@@ -212,7 +212,7 @@ void ComputeCLAHE::computeLUT(glm::uvec3 volDims, uint32_t* minMax, bool useLUT,
 	
 	// Set up Compute Shader 
 	glUseProgram(_minMaxShader);
-	glBindImageTexture(0, _volumeTexture, 0, GL_TRUE, _layer, GL_READ_ONLY, GL_R16UI);
+	glBindImageTexture(0, _volumeTexture, 0, GL_TRUE, _layer, GL_READ_ONLY, GL_R32UI);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, globalMinMaxBuffer);
 	glUniform3ui(glGetUniformLocation(_minMaxShader, "offset"), offset.x, offset.y, offset.z);
 	glUniform3ui(glGetUniformLocation(_minMaxShader, "volumeDims"), volDims.x, volDims.y, volDims.z);
@@ -297,8 +297,8 @@ void ComputeCLAHE::computeLUT_Masked(glm::uvec3 volDims, uint32_t* minData, uint
 
 	// Set up Compute Shader 
 	glUseProgram(_minMaxShader_Masked);
-	glBindImageTexture(0, _volumeTexture, 0, GL_TRUE, _layer, GL_READ_ONLY, GL_R16UI);
-	glBindImageTexture(1, _maskTexture, 0, GL_TRUE, _layer, GL_READ_ONLY, GL_R8UI);
+	glBindImageTexture(0, _volumeTexture, 0, GL_TRUE, _layer, GL_READ_ONLY, GL_R32UI);
+	glBindImageTexture(1, _maskTexture, 0, GL_TRUE, _layer, GL_READ_ONLY, GL_R32UI);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, globalMinBuffer);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, globalMaxBuffer);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 4, unMaskedPixelBuffer);
@@ -386,7 +386,7 @@ void ComputeCLAHE::computeHist(glm::uvec3 volDims, glm::uvec3 numSB, bool useLUT
 
 	// Set up Compute Shader 
 	glUseProgram(_histShader);
-	glBindImageTexture(0, _volumeTexture, 0, GL_TRUE, _layer, GL_READ_ONLY, GL_R16UI);
+	glBindImageTexture(0, _volumeTexture, 0, GL_TRUE, _layer, GL_READ_ONLY, GL_R32UI);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, _LUTbuffer);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, _histBuffer);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, _histMaxBuffer);
@@ -425,8 +425,8 @@ void ComputeCLAHE::computeHist_Masked(glm::uvec3 volDims, bool useLUT) {
 
 	// Set up Compute Shader 
 	glUseProgram(_histShader_Masked);
-	glBindImageTexture(0, _volumeTexture, 0, GL_TRUE, _layer, GL_READ_ONLY, GL_R16UI);
-	glBindImageTexture(1, _maskTexture, 0, GL_TRUE, _layer, GL_READ_ONLY, GL_R8UI);
+	glBindImageTexture(0, _volumeTexture, 0, GL_TRUE, _layer, GL_READ_ONLY, GL_R32UI);
+	glBindImageTexture(1, _maskTexture, 0, GL_TRUE, _layer, GL_READ_ONLY, GL_R32UI);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, _LUTbuffer);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, _histBuffer);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 4, _histMaxBuffer);
@@ -759,7 +759,7 @@ GLuint ComputeCLAHE::computeLerp(glm::uvec3 volDims, glm::uvec3 numSB, bool useL
 
 	// Set up Compute Shader 
 	glUseProgram(_lerpShader);
-	glBindImageTexture(0, _volumeTexture, 0, GL_TRUE, _layer, GL_READ_ONLY, GL_R16UI);
+	glBindImageTexture(0, _volumeTexture, 0, GL_TRUE, _layer, GL_READ_ONLY, GL_R32UI);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, _LUTbuffer);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, _histBuffer);
 	glBindImageTexture(3, newVolumeTexture, 0, GL_TRUE, _layer, GL_WRITE_ONLY, GL_R16F);
@@ -795,7 +795,7 @@ GLuint ComputeCLAHE::computeLerp_Focused(glm::uvec3 volDims, glm::uvec3 numSB, g
 	
 	// Set up Compute Shader 
 	glUseProgram(_lerpShader_Focused);
-	glBindImageTexture(0, _volumeTexture, 0, GL_TRUE, _layer, GL_READ_ONLY, GL_R16UI);
+	glBindImageTexture(0, _volumeTexture, 0, GL_TRUE, _layer, GL_READ_ONLY, GL_R32UI);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, _LUTbuffer);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, _histBuffer);
 	glBindImageTexture(3, newVolumeTexture, 0, GL_TRUE, _layer, GL_WRITE_ONLY, GL_R16F);
@@ -833,8 +833,8 @@ GLuint ComputeCLAHE::computeLerp_Masked(glm::uvec3 volDims, bool useLUT) {
 
 	// Set up Compute Shader 
 	glUseProgram(_lerpShader_Masked);
-	glBindImageTexture(0, _volumeTexture, 0, GL_TRUE, _layer, GL_READ_ONLY, GL_R16UI);
-	glBindImageTexture(1, _maskTexture, 0, GL_TRUE, _layer, GL_READ_ONLY, GL_R8UI);
+	glBindImageTexture(0, _volumeTexture, 0, GL_TRUE, _layer, GL_READ_ONLY, GL_R32UI);
+	glBindImageTexture(1, _maskTexture, 0, GL_TRUE, _layer, GL_READ_ONLY, GL_R32UI);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, _LUTbuffer);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, _histBuffer);
 	glBindImageTexture(4, newVolumeTexture, 0, GL_TRUE, _layer, GL_WRITE_ONLY, GL_R16F);

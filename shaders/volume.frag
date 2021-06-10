@@ -24,7 +24,7 @@ uniform vec3 CameraPosition;
 uniform sampler3D Volume;
 
 uniform int useMask;
-layout(r8ui, binding = 1) uniform uimage3D Mask;
+layout(r32ui, binding = 1) uniform uimage3D Mask;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Helper functions
