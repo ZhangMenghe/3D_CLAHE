@@ -22,7 +22,7 @@ layout(std430, binding = 3) buffer inHist {
 };
 
 // output Volume Data
-layout(r16f, binding = 4) uniform image3D newVolume;
+layout(r32f, binding = 4) uniform image3D newVolume;
 
 
 uniform ivec3 numSB;	// number of Sub Blocks
