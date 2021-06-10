@@ -37,7 +37,7 @@ glm::uvec3 numSB_3D = glm::uvec3(4, 4, 2);
 glm::uvec3 min3D = glm::uvec3(200, 200, 40);
 glm::uvec3 max3D = glm::uvec3(400, 400, 90);
 float clipLimit3D = 0.85f;
-bool need_saved = true;
+bool need_saved = false;
 GLuint _currTexture;
 bool _useMask = false;
 enum class TextureMode {

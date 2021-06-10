@@ -45,7 +45,10 @@ float RayPlane(vec3 rayOrigin, vec3 rayDirection, vec3 planePoint, vec3 planeNor
 vec4 Sample(vec3 samplePoint) {
 	float sampled_value = textureLod(Volume, samplePoint, 0.0).r;
 
-	float intensity_01 = sampled_value;//*0.0002442002442002442;
+	// float intensity_01 = sampled_value / 65355.0;//usampler3D Volume;raw volume
+
+	float intensity_01 = sampled_value;// processed, sampler3D
+
     // float intensity_01 = float(int(textureLod(Volume, samplePoint, 0.0).r) >> 4) & 0xFF) / 255.0;
 
     // float intensity_01 = float(sampled_value & 0xFF);

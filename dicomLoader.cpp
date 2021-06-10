@@ -71,8 +71,8 @@ bool dicomLoader::loadData(std::string dirpath, bool wmask) {
             vol_data[i] = uint16_t(tmp * 0xffff);
             // std::cout<<((int16_t)g_VolumeTexData[shift+1])<<" "<<((int16_t)g_VolumeTexData[shift])<<std::endl;
         }
-        // _textureID = InitTexture3D(g_img_w, g_img_h, g_img_d, GL_R16UI, GL_RED_INTEGER, GL_UNSIGNED_SHORT, GL_LINEAR, vol_data);
-        _textureID = InitTexture3D(g_img_w, g_img_h, g_img_d, GL_R16, GL_RED, GL_UNSIGNED_SHORT, GL_LINEAR, vol_data);
+        _textureID = InitTexture3D(g_img_w, g_img_h, g_img_d, GL_R16UI, GL_RED_INTEGER, GL_UNSIGNED_SHORT, GL_LINEAR, vol_data);
+        // _textureID = InitTexture3D(g_img_w, g_img_h, g_img_d, GL_R16, GL_RED, GL_UNSIGNED_SHORT, GL_LINEAR, vol_data);
 
         delete[] vol_data;
     }
